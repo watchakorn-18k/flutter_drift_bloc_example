@@ -49,26 +49,20 @@ class TodoPage extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // เปิด Dialog เพื่อให้ผู้ใช้กรอกข้อมูล
-          final result = await showDialog<Map<String, String>>(
-            context: context,
-            builder: (context) => AddTodoDialog(),
-          );
-
-          if (result != null &&
-              result.containsKey('title') &&
-              result.containsKey('content')) {
-            // ส่ง AddTodo event ไปยัง Bloc
-            context.read<TodoBloc>().add(AddTodo(
-                  title: result['title']!,
-                  content: result['content']!,
-                ));
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: Builder(
+          builder: (context) => FloatingActionButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (dialogContext) => BlocProvider.value(
+                      // ส่งต่อ bloc instance จาก parent
+                      value: context.read<TodoBloc>(),
+                      child: AddTodoDialog(),
+                    ),
+                  );
+                },
+                child: const Icon(Icons.add),
+              )),
     );
   }
 }

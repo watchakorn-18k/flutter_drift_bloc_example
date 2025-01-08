@@ -29,7 +29,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
     on<AddTodo>((event, emit) async {
       emit(TodoLoading());
-
+      print('Adding todo: ${event.title}');
       try {
         // เพิ่ม Todo ใหม่
         await todoRepository.addTodoItem(event.title, event.content);

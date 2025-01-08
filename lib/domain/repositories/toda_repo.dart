@@ -15,6 +15,7 @@ class TodoRepository {
             content: content,
           ),
         );
+    print('Added todo item: $title');
   }
 
   // ดึงรายการทั้งหมดในฐานข้อมูล

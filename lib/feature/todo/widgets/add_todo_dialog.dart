@@ -3,13 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_drift_test/feature/todo/bloc/todo_bloc.dart';
 
 class AddTodoDialog extends StatelessWidget {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
-
   AddTodoDialog({super.key});
+
+  // สร้าง controllers แบบ final เพราะ StatelessWidget จะถูกสร้างใหม่ทุกครั้งที่มีการ rebuild
+  final _titleController = TextEditingController();
+  final _contentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    // เข้าถึง bloc โดยตรง
+    final todoBloc = context.read<TodoBloc>();
+
     return AlertDialog(
       title: const Text('Add Todo'),
       content: Column(
@@ -27,7 +31,7 @@ class AddTodoDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(), // ปิด Dialog
+          onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
         TextButton(
@@ -36,12 +40,7 @@ class AddTodoDialog extends StatelessWidget {
             final content = _contentController.text;
 
             if (title.isNotEmpty && content.isNotEmpty) {
-              // ส่ง AddTodo event ไปยัง Bloc
-              context
-                  .read<TodoBloc>()
-                  .add(AddTodo(title: title, content: content));
-
-              // ปิด Dialog
+              todoBloc.add(AddTodo(title: title, content: content));
               Navigator.of(context).pop();
             }
           },
